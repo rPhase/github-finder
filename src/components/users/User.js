@@ -15,8 +15,7 @@ const User = () => {
     getUser(username);
     getUserRepos(username);
     removeAlert();
-    // eslint-disable-next-line
-  }, []);
+  }, [removeAlert, username, getUser, getUserRepos]);
 
   const {
     name,

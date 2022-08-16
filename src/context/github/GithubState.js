@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useCallback, useReducer } from 'react';
 import axios from 'axios';
 import GithubContext from './githubContext';
 import GithubReducer from './githubReducer';
@@ -40,7 +40,7 @@ const GithubState = (props) => {
   };
 
   // Get single Github user
-  const getUser = async (username) => {
+  const getUser = useCallback(async (username) => {
     setLoading();
     const res = await axios.get(`https://api.github.com/users/${username}`, {
       headers: {
@@ -52,10 +52,10 @@ const GithubState = (props) => {
       type: GET_USER,
       payload: res.data,
     });
-  };
+  }, []);
 
   // Get users repos
-  const getUserRepos = async (username) => {
+  const getUserRepos = useCallback(async (username) => {
     setLoading();
     const res = await axios.get(
       `https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc`,
@@ -70,7 +70,7 @@ const GithubState = (props) => {
       type: GET_REPOS,
       payload: res.data,
     });
-  };
+  }, []);
 
   // Clear users from state
   const clearUsers = () => dispatch({ type: CLEAR_USERS });
