@@ -1,9 +1,14 @@
 import React, { useContext, useState } from 'react';
-import GithubContext from '../../context/github/githubContext';
 import AlertContext from '../../context/alert/alertContext';
+import {
+  useGithub,
+  searchUsers,
+  clearUsers,
+} from '../../context/github/GithubState';
 
 const Search = () => {
-  const githubCtx = useContext(GithubContext);
+  const [githubState, githubDispatch] = useGithub();
+
   const alertCtx = useContext(AlertContext);
 
   const [text, setText] = useState('');
@@ -17,7 +22,7 @@ const Search = () => {
     if (text.trim() === '') {
       alertCtx.setAlert('Please enter something', 'light');
     } else {
-      githubCtx.searchUsers(text);
+      searchUsers(githubDispatch, text);
       setText('');
       alertCtx.removeAlert();
     }
@@ -39,10 +44,10 @@ const Search = () => {
           className='btn btn-dark btn-block'
         />
       </form>
-      {githubCtx.users.length > 0 && (
+      {githubState.users.length > 0 && (
         <button
           className='btn btn-light btn-block'
-          onClick={githubCtx.clearUsers}
+          onClick={() => clearUsers(githubDispatch)}
         >
           Clear
         </button>
