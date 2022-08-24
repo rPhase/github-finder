@@ -3,19 +3,26 @@ import { NavLink } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import Spinner from '../layout/Spinner';
 import Repos from '../repos/Repos';
-import GithubContext from '../../context/github/githubContext';
 import AlertContext from '../../context/alert/alertContext';
+import {
+  useGithub,
+  getUser,
+  getUserRepos,
+} from '../../context/github/GithubState';
+
 const User = () => {
-  const githubCtx = useContext(GithubContext);
+  const [githubState, githubDispatch] = useGithub();
+  const { loading, user, repos } = githubState;
+
   const { removeAlert } = useContext(AlertContext);
+
   const { username } = useParams();
-  const { getUser, loading, user, repos, getUserRepos } = githubCtx;
 
   useEffect(() => {
-    getUser(username);
-    getUserRepos(username);
+    getUser(githubDispatch, username);
+    getUserRepos(githubDispatch, username);
     removeAlert();
-  }, [removeAlert, username, getUser, getUserRepos]);
+  }, [removeAlert, username, githubDispatch]);
 
   const {
     name,
